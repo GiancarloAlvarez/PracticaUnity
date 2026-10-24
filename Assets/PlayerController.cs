@@ -22,7 +22,21 @@ public class PlayerController: MonoBehaviour
     {
         // Handle player input and movement here
         float speedHorizontal = Input.GetAxis("Horizontal");
+
+        animator.SetFloat("movement", speedHorizontal * speed);
+
         Vector3 position = transform.position;
+
+
+        if(speedHorizontal < 0)
+        {
+            transform.localScale = new Vector3(-1,1,1);
+        }
+        else if(speedHorizontal > 0)
+        {
+            transform.localScale = new Vector3(1,1,1);
+        }
+
         transform.position = new Vector3(position.x + speedHorizontal * speed * Time.deltaTime, position.y, position.z);
         RaycastHit2D hit = Physics2D.Raycast(transform.position,Vector2.down,longitudRaaycast,groundLayer);
         onFloor = hit.collider != null;
@@ -30,6 +44,7 @@ public class PlayerController: MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Space) && onFloor) {
             rb.AddForce( new Vector2(0f, jumpForce), ForceMode2D.Impulse);
         }
+        animator.SetBool("onFloor", onFloor);
     }
 
     private void OnDrawGizmos()
